@@ -1,21 +1,24 @@
 package ru.practicum.shareit.item.dao;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.Item;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.user.dao.InMemoryUserStorage;
 
 import java.util.*;
 
 import static ru.practicum.shareit.item.dao.ItemMapper.toItem;
 import static ru.practicum.shareit.item.dao.ItemMapper.toItemDto;
-import static ru.practicum.shareit.user.dao.InMemoryUserStorage.users;
 
 @Slf4j
 @Repository
+@RequiredArgsConstructor
 public class InMemoryItemStorage {
-    public static final Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
+    private final InMemoryUserStorage inMemoryUserStorage;
 
     private Long getNextId() {
         long currentMaxId = items.keySet()
@@ -27,7 +30,7 @@ public class InMemoryItemStorage {
     }
 
     public ItemDto addItem(ItemDto itemDto, Long ownerId) {
-        if (!users.containsKey(ownerId)) {
+        if (!inMemoryUserStorage.getUsers().containsKey(ownerId)) {
             log.warn("Владелец с указанным id " + ownerId + " не найден");
             throw new NotFoundException("Владелец с id " + ownerId + " не найден");
         }
@@ -39,7 +42,7 @@ public class InMemoryItemStorage {
     }
 
     public ItemDto updateItem(ItemDto itemDto, long userId) {
-        if (!users.containsKey(userId)) {
+        if (!inMemoryUserStorage.getUsers().containsKey(userId)) {
             log.warn("Пользователь с указанным id " + userId + " не найден");
             throw new NotFoundException("Пользователь с id " + userId + " не найден");
         }
