@@ -18,7 +18,7 @@ import static ru.practicum.shareit.user.dao.UserMapper.*;
 @Slf4j
 @Component
 public class InMemoryUserStorage {
-    public static Map<Long, User> users = new HashMap<>();
+    public static final Map<Long, User> users = new HashMap<>();
 
     private Long getNextId() {
         long currentMaxId = users.keySet()

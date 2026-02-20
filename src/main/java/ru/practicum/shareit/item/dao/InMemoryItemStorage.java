@@ -15,7 +15,7 @@ import static ru.practicum.shareit.user.dao.InMemoryUserStorage.users;
 @Slf4j
 @Repository
 public class InMemoryItemStorage {
-    public static Map<Long, Item> items = new HashMap<>();
+    public static final Map<Long, Item> items = new HashMap<>();
 
     private Long getNextId() {
         long currentMaxId = items.keySet()
