@@ -21,28 +21,33 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @PostMapping
-    public UserDto addUser(@Valid @RequestBody final User user) {
+    public UserDto addUser(@Valid @RequestBody final UserDto user) {
+        log.info("Пользователь добавлен");
         return userServiceImpl.addUser(user);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@RequestBody final Long userId) {
-        return userServiceImpl.updateUser(userId);
+    public UserDto updateUser(@PathVariable("userId") final Long userId, @Valid @RequestBody final UserDto userDto) {
+        userDto.setId(userId);
+        log.info("Пользователь обновлен");
+        return userServiceImpl.updateUser(userDto);
     }
 
     @GetMapping
     public Collection<UserDto> getAllUsers() {
+        log.info("Список пользователей выведен");
         return userServiceImpl.getAllUsers();
     }
 
-    @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable final Long id) {
-        return userServiceImpl.getUser(id);
+    @GetMapping("/{userId}")
+    public UserDto getUser(@PathVariable("userId")  final Long userId) {
+        log.info("Польователь с id " + userId + " выведен");
+        return userServiceImpl.getUser(userId);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable final Long id) {
-        log.info("Пользователь с id: {} удален", id);
-        userServiceImpl.deleteUser(id);
+    @DeleteMapping("/{userId}")
+    public void deleteUser(@PathVariable("userId") final Long userId) {
+        log.info("Пользователь с id " + userId + " удален");
+        userServiceImpl.deleteUser(userId);
     }
 }

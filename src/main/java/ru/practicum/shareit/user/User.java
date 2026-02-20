@@ -1,8 +1,6 @@
 package ru.practicum.shareit.user;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,12 +8,10 @@ import lombok.Data;
  * TODO Sprint add-controllers.
  */
 @Data
-@Valid
 @AllArgsConstructor
 public class User {
     private Long id;
     private String name;
     @Email(message = "Email should be valid")
-    @NotNull
     private String email;
 }

@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.dao;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -12,12 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.practicum.shareit.user.UserMapper.mapToUser;
+import static ru.practicum.shareit.user.dao.UserMapper.*;
 
 @Slf4j
 @Component
 public class InMemoryUserStorage {
-    private static Map<Long, User> users = new HashMap<>();
+    public static Map<Long, User> users = new HashMap<>();
 
     private Long getNextId() {
         long currentMaxId = users.keySet()
@@ -28,39 +29,55 @@ public class InMemoryUserStorage {
         return ++currentMaxId;
     }
 
-    public UserDto addUser(User user) {
+    public UserDto addUser(UserDto user) {
+        if (user.getEmail() == null) {
+            log.warn("Некорректная почта");
+            throw new BadRequestException("некорректный тип почты");
+        }
         for (User usr : users.values()) {
             if (usr.getEmail().equals(user.getEmail())) {
-                throw new ValidationException("Нельзя добавить пользователя с одинаковыми почтами");
+                log.warn("такая почта уже используется");
+                throw new ValidationException("Нельзя добавить существующую почту");
             }
         }
         user.setId(getNextId());
-        users.put(user.getId(), user);
-        return mapToUser(user);
+        users.put(user.getId(), toUser(user));
+        return user;
     }
 
-    public UserDto updateUser(Long userId) {
-        if (!users.containsKey(userId)) {
-            log.warn("Пользователь с указанным id не найден");
-            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
+    public UserDto updateUser(UserDto userDto) {
+        for (User usr : users.values()) {
+            if (usr.getEmail().equals(userDto.getEmail())) {
+                log.warn("такая почта уже используется");
+                throw new ValidationException("Нельзя добавить существующую почту");
+            }
         }
-        User user = users.get(userId);
-        user.setEmail(user.getEmail());
-        user.setName(user.getName());
-        return mapToUser(user);
+        if (!users.containsKey(userDto.getId())) {
+            log.warn("Пользователь с указанным id не найден");
+            throw new NotFoundException("Пользователь с id = " + userDto.getId() + " не найден");
+        }
+        User newUser = toUser(userDto);
+        User user = users.get(newUser.getId());
+        if (newUser.getName() != null) {
+            user.setName(newUser.getName());
+        }
+        if (newUser.getEmail() != null) {
+            user.setEmail(newUser.getEmail());
+        }
+        return toUserDto(user);
     }
 
     public List<UserDto> getAllUsers() {
         List<UserDto> dtoList = new ArrayList<>();
         for (User user : users.values()) {
-            dtoList.add(mapToUser(user));
+            dtoList.add(toUserDto(user));
         }
         return dtoList;
     }
 
     public UserDto getUser(Long id) {
         User user = users.get(id);
-        return mapToUser(user);
+        return toUserDto(user);
     }
 
     public void deleteUser(Long id) {

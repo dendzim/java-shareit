@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dao.InMemoryUserStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 
-import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -16,17 +16,17 @@ public class UserServiceImpl implements UserService{
     private final InMemoryUserStorage inMemoryUserStorage;
 
     @Override
-    public UserDto addUser(User user) {
-        return inMemoryUserStorage.addUser(user);
+    public UserDto addUser(UserDto userDto) {
+        return inMemoryUserStorage.addUser(userDto);
     }
 
     @Override
-    public UserDto updateUser(Long id) {
-        return inMemoryUserStorage.updateUser(id);
+    public UserDto updateUser(UserDto userDto) {
+        return inMemoryUserStorage.updateUser(userDto);
     }
 
     @Override
-    public Collection<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         return inMemoryUserStorage.getAllUsers();
     }
 
