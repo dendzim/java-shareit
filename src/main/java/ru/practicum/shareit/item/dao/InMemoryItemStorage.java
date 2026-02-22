@@ -4,21 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.dao.InMemoryUserStorage;
+import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
 
-import static ru.practicum.shareit.item.dao.ItemMapper.toItem;
-import static ru.practicum.shareit.item.dao.ItemMapper.toItemDto;
 
 @Slf4j
 @Repository
 @RequiredArgsConstructor
 public class InMemoryItemStorage {
     private final Map<Long, Item> items = new HashMap<>();
-    private final InMemoryUserStorage inMemoryUserStorage;
 
     private Long getNextId() {
         long currentMaxId = items.keySet()
@@ -29,25 +24,13 @@ public class InMemoryItemStorage {
         return ++currentMaxId;
     }
 
-    public ItemDto addItem(ItemDto itemDto, Long ownerId) {
-        if (!inMemoryUserStorage.getUsers().containsKey(ownerId)) {
-            log.warn("Владелец с указанным id " + ownerId + " не найден");
-            throw new NotFoundException("Владелец с id " + ownerId + " не найден");
-        }
-        Item item = toItem(itemDto);
-        item.setOwnerId(ownerId);
+    public Item addItem(Item item) {
         item.setId(getNextId());
         items.put(item.getId(), item);
-        return toItemDto(item);
+        return item;
     }
 
-    public ItemDto updateItem(ItemDto itemDto, long userId) {
-        if (!inMemoryUserStorage.getUsers().containsKey(userId)) {
-            log.warn("Пользователь с указанным id " + userId + " не найден");
-            throw new NotFoundException("Пользователь с id " + userId + " не найден");
-        }
-        Item newItem = toItem(itemDto);
-        newItem.setOwnerId(userId);
+    public Item updateItem(Item newItem) {
         Item item = items.get(newItem.getId());
         if (newItem.getName() != null) {
             item.setName(newItem.getName());
@@ -58,30 +41,29 @@ public class InMemoryItemStorage {
         if (newItem.getAvailable() != null) {
             item.setAvailable(newItem.getAvailable());
         }
-
-        return toItemDto(item);
+        return item;
     }
 
-    public ItemDto getItem(long itemId) {
+    public Item getItem(long itemId) {
         if (!items.containsKey(itemId)) {
             log.warn("Предмет с указанным id " + itemId + " не найден");
             throw new NotFoundException("Предмет с id = " + itemId + " не найден");
         }
-        return toItemDto(items.get(itemId));
+        return items.get(itemId);
     }
 
-    public List<ItemDto> getAllOwnerItems(long ownerId) {
-        List<ItemDto> ownerItems = new ArrayList<>();
+    public List<Item> getAllOwnerItems(long ownerId) {
+        List<Item> ownerItems = new ArrayList<>();
         for (Item item : items.values()) {
             if (item.getOwnerId() == ownerId) {
-                ownerItems.add(toItemDto(item));
+                ownerItems.add(item);
             }
         }
         return ownerItems;
     }
 
-    public List<ItemDto> getNecessaryItem(String text) {
-        List<ItemDto> necessaryItems = new ArrayList<>();
+    public List<Item> getNecessaryItem(String text) {
+        List<Item> necessaryItems = new ArrayList<>();
         if (text == null || text.isBlank()) {
             return Collections.emptyList();
         }
@@ -89,7 +71,7 @@ public class InMemoryItemStorage {
         for (Item item : items.values()) {
             if (item.getAvailable() && item.getName().toLowerCase(Locale.ROOT).contains(text)
                     || item.getDescription().toLowerCase(Locale.ROOT).contains(text)) {
-                necessaryItems.add(toItemDto(item));
+                necessaryItems.add(item);
             }
         }
         return necessaryItems;

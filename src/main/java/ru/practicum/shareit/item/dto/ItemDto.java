@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import ru.practicum.shareit.exceptions.OnCreate;
+import ru.practicum.shareit.validation.OnCreate;
 
 /**
  * TODO Sprint add-controllers.

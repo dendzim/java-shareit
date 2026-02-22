@@ -24,4 +24,11 @@ public class ErrorHandler {
         log.warn("Объект не найден");
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleInternalServerException(final InternalServerException e) {
+        log.warn("Ошибка сервера");
+        return new ErrorResponse(e.getMessage());
+    }
 }

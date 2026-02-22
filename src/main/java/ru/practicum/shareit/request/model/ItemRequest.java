@@ -1,9 +1,9 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.model;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDate;
 

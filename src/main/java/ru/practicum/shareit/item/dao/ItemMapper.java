@@ -1,7 +1,7 @@
 package ru.practicum.shareit.item.dao;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.item.Item;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 @UtilityClass
