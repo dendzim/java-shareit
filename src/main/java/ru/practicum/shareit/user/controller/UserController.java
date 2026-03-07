@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 import ru.practicum.shareit.user.dto.UserDto;
 
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable("userId")  final Long userId) {
+    public User getUser(@PathVariable("userId")  final Long userId) {
         log.info("Польователь с id " + userId + " выведен");
         return userServiceImpl.getUser(userId);
     }

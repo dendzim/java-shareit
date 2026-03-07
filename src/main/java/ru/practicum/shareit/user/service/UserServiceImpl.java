@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
-import ru.practicum.shareit.user.dao.InMemoryUserStorage;
+import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
@@ -20,7 +20,7 @@ import static ru.practicum.shareit.user.dao.UserMapper.toUserDto;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    private final InMemoryUserStorage inMemoryUserStorage;
+    private final UserRepository userRepository;
 
     @Override
     public UserDto addUser(UserDto userDto) {
@@ -29,47 +29,48 @@ public class UserServiceImpl implements UserService {
             log.warn("Некорректная почта");
             throw new BadRequestException("некорректный тип почты");
         }
-        for (User usr : inMemoryUserStorage.getUsers().values()) {
+        for (User usr : userRepository.findAll()) {
             if (usr.getEmail().equals(user.getEmail())) {
                 log.warn("такая почта уже используется");
                 throw new ValidationException("Нельзя добавить существующую почту");
             }
         }
-        return toUserDto(inMemoryUserStorage.addUser((user)));
+        return toUserDto(userRepository.save(user));
     }
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        for (User usr : inMemoryUserStorage.getUsers().values()) {
+        for (User usr : userRepository.findAll()) {
             if (usr.getEmail().equals(userDto.getEmail())) {
                 log.warn("такая почта уже используется");
                 throw new ValidationException("Нельзя добавить существующую почту");
             }
         }
-        if (!inMemoryUserStorage.getUsers().containsKey(userDto.getId())) {
+        if (!userRepository.existsById(userDto.getId())) {
             log.warn("Пользователь с указанным id не найден");
             throw new NotFoundException("Пользователь с id = " + userDto.getId() + " не найден");
         }
         User newUser = toUser(userDto);
-        return toUserDto(inMemoryUserStorage.updateUser(newUser));
+        return toUserDto(userRepository.save(newUser));
     }
 
     @Override
     public List<UserDto> getAllUsers() {
         List<UserDto> dtoList = new ArrayList<>();
-        for (User user : inMemoryUserStorage.getAllUsers()) {
+        for (User user : userRepository.findAll()) {
             dtoList.add(toUserDto(user));
         }
         return dtoList;
     }
 
     @Override
-    public UserDto getUser(Long id) {
-        return toUserDto(inMemoryUserStorage.getUser(id));
+    public User getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("Пользователь с id = " + id + " не найден"));
     }
 
     @Override
     public void deleteUser(Long id) {
-        inMemoryUserStorage.deleteUser(id);
+        userRepository.deleteById(id);
     }
 }
