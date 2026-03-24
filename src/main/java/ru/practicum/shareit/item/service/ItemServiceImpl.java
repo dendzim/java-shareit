@@ -13,11 +13,13 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dao.UserRepository;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static ru.practicum.shareit.item.dao.CommentMapper.toCommentDto;
 import static ru.practicum.shareit.item.dao.ItemMapper.toItem;
 import static ru.practicum.shareit.item.dao.ItemMapper.toItemDto;
 
@@ -58,7 +60,9 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDto getItem(long itemId) {
-        Item item = toItemDto(itemRepository.findById(itemId));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Предмет с id " + itemId + " не найден"));
+
         ItemDto itemDto = toItemDto(item);
         Collection<Comment> comments = commentRepository.findByItemId(itemId);
 
@@ -85,7 +89,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public CommentDto addComment(Long userId, Long itemId, CommentDto commentText) {
-        return null;
+    public CommentDto addComment(Long userId, Long itemId, Comment comment) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден"));
+
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Предмет с id " + userId + " не найден"));
+        CommentDto commentDto = null;
+        if (item.getOwnerId().equals(user.getId())) {
+            commentDto = toCommentDto(comment);
+            commentRepository.save(comment);
+        }
+        return commentDto;
     }
 }
