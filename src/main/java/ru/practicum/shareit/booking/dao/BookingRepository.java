@@ -4,9 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.model.LastAndNextDate;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -32,4 +34,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Collection<Booking> findByItemOwnerIdAndEndIsBeforeOrderByEndDesc(Long ownerId, LocalDateTime now);
 
     Collection<Booking> findByItemOwnerIdAndStartIsAfterOrderByEndDesc(Long ownerId, LocalDateTime now);
+
+    boolean existsByItemIdAndBookerIdAndStatusIsAndEndBefore(Long itemId, Long userId, BookingStatus bookingStatus,
+                                                             LocalDateTime now);
+
+    List<LastAndNextDate> findLastAndNextDatesByOwnerId(long ownerId);
 }
