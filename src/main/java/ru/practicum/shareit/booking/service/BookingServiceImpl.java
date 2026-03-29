@@ -23,7 +23,7 @@ import static ru.practicum.shareit.booking.dao.BookingMapper.mapToBooking;
 
 @Service
 @AllArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;

@@ -157,7 +157,7 @@ public class ItemServiceImpl implements ItemService {
         return toCommentDto(commentRepository.save(comment));
     }
 
-    private ItemDto addCommentsToItem(ItemDto itemDto, Collection<Comment> comments ) {
+    private ItemDto addCommentsToItem(ItemDto itemDto, Collection<Comment> comments) {
         Collection<CommentDto> commentsDto = comments.stream()
                 .map(CommentMapper::toCommentDto)
                 .toList();
