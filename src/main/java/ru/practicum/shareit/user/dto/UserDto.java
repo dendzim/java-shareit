@@ -13,7 +13,6 @@ import ru.practicum.shareit.validation.OnUpdate;
 @Valid
 @AllArgsConstructor
 public class UserDto {
-
     private Long id;
 
     @NotBlank(groups = OnCreate.class, message = "Имя пользователя не может быть пустым")

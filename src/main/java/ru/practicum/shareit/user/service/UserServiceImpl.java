@@ -1,11 +1,9 @@
 package ru.practicum.shareit.user.service;
 
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -23,7 +21,6 @@ import static ru.practicum.shareit.user.dao.UserMapper.toUserDto;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
-
     @Override
     @Transactional
     public UserDto addUser(UserDto userDto) {
@@ -38,7 +35,6 @@ public class UserServiceImpl implements UserService {
             log.warn("Пользователь с указанным id не найден");
             throw new NotFoundException("Пользователь с id = " + userDto.getId() + " не найден");
         }
-
         User newUser = getUser(userDto.getId());
         if (userDto.getName() != null) {
             newUser.setName(userDto.getName());
