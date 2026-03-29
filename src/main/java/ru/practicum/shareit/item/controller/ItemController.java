@@ -35,9 +35,8 @@ public class ItemController {
     public ItemDto updateItem(@PathVariable("itemId")  final long itemId,
                               @RequestHeader("X-Sharer-User-Id") long ownerId,
                               @Validated(OnUpdate.class) @RequestBody final ItemDto itemDto) {
-        itemDto.setId(itemId);
         log.info("Предмет обновлен");
-        return itemService.updateItem(itemDto, ownerId);
+        return itemService.updateItem(itemDto, itemId, ownerId);
     }
 
     @GetMapping("/{itemId}")

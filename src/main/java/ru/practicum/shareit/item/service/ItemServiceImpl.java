@@ -51,7 +51,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto updateItem(ItemDto itemDto, long userId) {
+    public ItemDto updateItem(ItemDto itemDto,Long itemId,  long userId) {
         if (!userRepository.existsById(userId)) {
             log.warn("Пользователь с указанным id " + userId + " не найден");
             throw new NotFoundException("Пользователь с id " + userId + " не найден");
@@ -59,6 +59,15 @@ public class ItemServiceImpl implements ItemService {
 
         Item newItem = toItem(itemDto);
         newItem.setOwnerId(userId);
+        if (itemDto.getName() != null) {
+            newItem.setName(itemDto.getName());
+        }
+        if (itemDto.getDescription() != null) {
+            newItem.setDescription(itemDto.getDescription());
+        }
+        if (itemDto.getAvailable() != null) {
+            newItem.setIsAvailable(itemDto.getAvailable());
+        }
         return toItemDto(itemRepository.save(newItem));
     }
 

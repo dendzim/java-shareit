@@ -4,6 +4,7 @@ import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dao.UserRepository;
@@ -22,35 +23,29 @@ import static ru.practicum.shareit.user.dao.UserMapper.toUserDto;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+
     @Override
+    @Transactional
     public UserDto addUser(UserDto userDto) {
         User user = toUser(userDto);
-        if (user.getEmail() == null) {
-            log.warn("Некорректная почта");
-            throw new BadRequestException("некорректный тип почты");
-        }
-        for (User usr : userRepository.findAll()) {
-            if (usr.getEmail().equals(user.getEmail())) {
-                log.warn("такая почта уже используется");
-                throw new ValidationException("Нельзя добавить существующую почту");
-            }
-        }
         return toUserDto(userRepository.save(user));
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UserDto userDto) {
-        for (User usr : userRepository.findAll()) {
-            if (usr.getEmail().equals(userDto.getEmail())) {
-                log.warn("такая почта уже используется");
-                throw new ValidationException("Нельзя добавить существующую почту");
-            }
-        }
         if (!userRepository.existsById(userDto.getId())) {
             log.warn("Пользователь с указанным id не найден");
             throw new NotFoundException("Пользователь с id = " + userDto.getId() + " не найден");
         }
-        User newUser = toUser(userDto);
+
+        User newUser = getUser(userDto.getId());
+        if (userDto.getName() != null) {
+            newUser.setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null) {
+            newUser.setEmail(userDto.getEmail());
+        }
         return toUserDto(userRepository.save(newUser));
     }
 

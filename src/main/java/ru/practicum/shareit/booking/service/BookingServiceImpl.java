@@ -48,7 +48,7 @@ public class BookingServiceImpl implements BookingService{
         booking.setItem(item);
         booking.setBooker(user);
         booking.setStatus(BookingStatus.WAITING);
-        return booking;
+        return bookingRepository.save(booking);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class BookingServiceImpl implements BookingService{
     public Booking updateBookingStatus(Long userId, Long bookingId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронирование не найдено"));
-        if (!booking.getBooker().getId().equals(userId)) {
+        if (!booking.getItem().getOwnerId().equals(userId)) {
             throw new BadRequestException("Менять статус может только владелец");
         }
         if (approved) {

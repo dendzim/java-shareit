@@ -1,6 +1,7 @@
 package ru.practicum.shareit.booking.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingStatus;
@@ -38,5 +39,14 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     boolean existsByItemIdAndBookerIdAndStatusIsAndEndBefore(Long itemId, Long userId, BookingStatus bookingStatus,
                                                              LocalDateTime now);
 
+    @Query("""
+                SELECT
+                    b.item.id as itemId,
+                    MAX(CASE WHEN b.start < CURRENT_TIMESTAMP THEN b.start ELSE NULL END) as lastBooking,
+                    MIN(CASE WHEN b.start > CURRENT_TIMESTAMP THEN b.start ELSE NULL END) as nextBooking
+                FROM Booking b
+                WHERE b.item.ownerId = ?1
+                GROUP BY b.item.id
+            """)
     List<LastAndNextDate> findLastAndNextDatesByOwnerId(long ownerId);
 }
