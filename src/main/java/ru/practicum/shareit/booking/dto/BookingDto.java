@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * TODO Sprint add-bookings.
@@ -19,9 +20,11 @@ public class BookingDto {
     @NotNull
     @Positive
     private Long itemId;
+    @NotNull
     @FutureOrPresent
-    private LocalDate start;
+    private LocalDateTime start;
+    @NotNull
     @FutureOrPresent
-    private LocalDate end;
+    private LocalDateTime end;
 
 }

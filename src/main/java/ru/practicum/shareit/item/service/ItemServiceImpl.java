@@ -21,7 +21,6 @@ import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.item.dao.CommentMapper.toCommentDto;
@@ -57,8 +56,10 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException("Пользователь с id " + userId + " не найден");
         }
 
-        Item newItem = toItem(itemDto);
+        Item newItem = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Предмет с id " + itemId + " не найден"));
         newItem.setOwnerId(userId);
+
         if (itemDto.getName() != null) {
             newItem.setName(itemDto.getName());
         }
