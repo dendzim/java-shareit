@@ -31,4 +31,11 @@ public class ErrorHandler {
         log.warn("Ошибка сервера");
         return new ErrorResponse(e.getMessage());
     }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorResponse handleThrowable(final Throwable e) {
+        log.error("Непредвиденная ошибка");
+        return new ErrorResponse(e.getMessage());
+    }
 }
