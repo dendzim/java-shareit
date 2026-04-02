@@ -1,17 +1,28 @@
 package ru.practicum.shareit.user.model;
 
-import jakarta.validation.constraints.Email;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * TODO Sprint add-controllers.
  */
-@Data
+@Entity
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "name")
     private String name;
-    @Email(message = "Email should be valid")
+
+    @Column(name = "email", unique = true)
     private String email;
 }

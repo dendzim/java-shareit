@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.validation.OnCreate;
 import ru.practicum.shareit.validation.OnUpdate;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -33,9 +35,8 @@ public class ItemController {
     public ItemDto updateItem(@PathVariable("itemId")  final long itemId,
                               @RequestHeader("X-Sharer-User-Id") long ownerId,
                               @Validated(OnUpdate.class) @RequestBody final ItemDto itemDto) {
-        itemDto.setId(itemId);
         log.info("Предмет обновлен");
-        return itemService.updateItem(itemDto, ownerId);
+        return itemService.updateItem(itemDto, itemId, ownerId);
     }
 
     @GetMapping("/{itemId}")
@@ -54,5 +55,13 @@ public class ItemController {
     public Collection<ItemDto> getNecessaryItem(@RequestParam String text) {
         log.info("Список предметов содержащих " + text + " выведен");
         return itemService.getNecessaryItem(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@PathVariable("itemId") final long itemId,
+                           @RequestHeader("X-Sharer-User-Id") long ownerId,
+                           @RequestBody Comment comment) {
+        log.info("Комментарий добавлен");
+        return itemService.addComment(ownerId, itemId, comment);
     }
 }
