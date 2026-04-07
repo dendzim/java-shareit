@@ -6,7 +6,7 @@ import ru.practicum.shareit.request.model.ItemRequest;
 
 @UtilityClass
 public class ItemRequestMapper {
-    public static ItemRequestDto mapToItemRequest(ItemRequest itemRequest) {
+    public static ItemRequestDto mapToItemRequestDto(ItemRequest itemRequest) {
         return new ItemRequestDto(
                 itemRequest.getDescription(),
                 itemRequest.getRequestor(),

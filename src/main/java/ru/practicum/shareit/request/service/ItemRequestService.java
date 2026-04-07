@@ -12,5 +12,5 @@ public interface ItemRequestService {
 
     Collection<ItemRequestDto> getMyReqests(Long ownerId);
 
-    void getReqestById(Long id);
+    ItemRequestDto getReqestById(Long id);
 }
