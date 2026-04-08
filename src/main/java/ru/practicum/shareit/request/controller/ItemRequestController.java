@@ -26,7 +26,7 @@ public class ItemRequestController {
     private final ItemRequestServiceImpl itemRequestServiceImpl;
 
     @PostMapping
-    public ItemRequestDto addUser(@RequestHeader("X-Sharer-User-Id") Long ownerId, @RequestBody final ItemRequest itemRequest) {
+    public ItemRequestDto addUser(@RequestBody final ItemRequest itemRequest) {
         log.info("Запрос добавлен");
         return itemRequestServiceImpl.addItemRequest(itemRequest);
     }

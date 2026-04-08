@@ -27,4 +27,5 @@ public class ItemDto {
     private LocalDateTime lastBooking;
     private LocalDateTime nextBooking;
     private Collection<CommentDto> comments;
+    private Long requestId;
 }
