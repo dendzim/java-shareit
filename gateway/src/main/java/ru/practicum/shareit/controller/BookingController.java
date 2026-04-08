@@ -16,7 +16,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ru.practicum.shareit.dto.BookItemRequestDto;
+import ru.practicum.shareit.dto.BookingDto;
 import ru.practicum.shareit.dto.BookingState;
 import ru.practicum.shareit.client.BookingClient;
 
@@ -42,7 +42,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                                           @RequestBody @Valid BookItemRequestDto requestDto) {
+                                           @RequestBody @Valid BookingDto requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
         return bookingClient.bookItem(userId, requestDto);
     }
