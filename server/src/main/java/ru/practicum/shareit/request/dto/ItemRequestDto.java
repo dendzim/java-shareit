@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 /**
