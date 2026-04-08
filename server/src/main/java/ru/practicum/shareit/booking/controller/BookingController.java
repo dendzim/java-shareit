@@ -1,7 +1,5 @@
 package ru.practicum.shareit.booking.controller;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -22,16 +20,16 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public Booking createBooking(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                 @Valid @RequestBody BookingDto bookingDto) {
+    public Booking createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                 @RequestBody BookingDto bookingDto) {
 
         return bookingService.createBooking(userId, bookingDto);
     }
 
     @PatchMapping("/{bookingId}")
     public Booking updateBookingStatus(
-            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-            @PathVariable @Positive Long bookingId,
+            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @PathVariable Long bookingId,
             @RequestParam Boolean approved) {
 
         return bookingService.updateBookingStatus(userId, bookingId, approved);
@@ -39,15 +37,15 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public Booking getBooking(
-            @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-            @PathVariable @Positive Long bookingId) {
+            @RequestHeader("X-Sharer-User-Id") Long userId,
+            @PathVariable Long bookingId) {
 
         return bookingService.getBooking(userId, bookingId);
     }
 
     @GetMapping
     public Collection<Booking> findByBookerAndState(
-            @RequestHeader("X-Sharer-User-Id") @Positive Long bookerId,
+            @RequestHeader("X-Sharer-User-Id") Long bookerId,
             @RequestParam (defaultValue = "ALL") BookingState state) {
 
         return bookingService.findByBookerAndState(bookerId, state);
@@ -55,7 +53,7 @@ public class BookingController {
 
     @GetMapping("/owner")
     public Collection<Booking> findByOwnerAndState(
-            @RequestHeader("X-Sharer-User-Id") @Positive Long ownerId,
+            @RequestHeader("X-Sharer-User-Id") Long ownerId,
             @RequestParam (defaultValue = "ALL") BookingState state) {
 
         return bookingService.findByOwnerAndState(ownerId, state);
