@@ -10,7 +10,7 @@ public interface ItemRequestService {
 
     Collection<ItemRequestDto> getAllRequests();
 
-    Collection<ItemRequestDto> getMyReqests(Long ownerId);
+    Collection<ItemRequestDto> getMyRequests(Long ownerId);
 
-    ItemRequestDto getReqestById(Long id);
+    ItemRequestDto getRequestById(Long id);
 }

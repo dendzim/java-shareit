@@ -1,28 +1,28 @@
 package ru.practicum.shareit.client;
 
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.dto.ItemRequestDto;
 
-import java.util.Collection;
-
+@Component
 public class ItemRequestClient extends BaseClient {
-    public ItemRequestClient(RestTemplate rest) {
-        super(rest);
+
+    public ItemRequestClient() {
+        super("/requests");
     }
 
     public Object addItemRequest(ItemRequestDto itemRequest) {
-        return null;
+        return post("", itemRequest);
     }
 
-    public Collection<ItemRequestDto> getAllRequests() {
-        return null;
+    public Object getAllRequests() {
+        return get("/all");
     }
 
-    public Collection<ItemRequestDto> getMyReqests(Long ownerId) {
-        return null;
+    public Object getMyRequests(Long ownerId) {
+        return get("", ownerId);
     }
 
-    public ItemRequestDto getReqestById(Long id) {
-        return null;
+    public Object getReqestById(Long id) {
+        return get("/" + id);
     }
 }

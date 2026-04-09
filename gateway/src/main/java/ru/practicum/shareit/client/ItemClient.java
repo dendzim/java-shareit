@@ -1,37 +1,43 @@
 package ru.practicum.shareit.client;
 
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.dto.CommentDto;
 import ru.practicum.shareit.dto.ItemDto;
 
-import java.util.Collection;
+import java.util.Collections;
 
+@Component
 public class ItemClient extends BaseClient {
-    public ItemClient(RestTemplate rest) {
-        super(rest);
+
+    public ItemClient() {
+        super("/items");
     }
 
     public Object addItem(ItemDto itemDto, Long ownerId) {
-        return null;
+        return post("", itemDto, ownerId);
     }
 
-    public ItemDto updateItem(ItemDto itemDto, long itemId, long ownerId) {
-        return null;
+    public Object updateItem(long itemId, ItemDto itemDto, long ownerId) {
+        return patch("/" + itemId, itemDto, ownerId);
     }
 
-    public ItemDto getItem(long itemId) {
-        return null;
+    public Object getItem(long itemId) {
+        return get("/" + itemId);
     }
 
-    public Collection<ItemDto> getAllOwnerItems(long ownerId) {
-        return null;
+    public Object getAllOwnerItems(long ownerId) {
+        return get("", ownerId);
     }
 
-    public Collection<ItemDto> getNecessaryItem(String text) {
-        return null;
+    public Object getNecessaryItem(String text) {
+        if (text == null || text.isBlank()) {
+            return get("/search", null, Collections.emptyMap());
+        }
+
+        return get("/search?text={text}", null, Collections.singletonMap("text", text));
     }
 
-    public CommentDto addComment(long ownerId, long itemId, CommentDto comment) {
-        return null;
+    public Object addComment(long itemId, long ownerId, CommentDto comment) {
+        return post("/" + itemId + "/comment", comment, ownerId);
     }
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.controller;
 
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -8,8 +9,6 @@ import ru.practicum.shareit.OnCreate;
 import ru.practicum.shareit.OnUpdate;
 import ru.practicum.shareit.client.UserClient;
 import ru.practicum.shareit.dto.UserDto;
-
-import java.util.Collection;
 
 @Slf4j
 @RestController
@@ -26,7 +25,7 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public Object updateUser(@PathVariable("userId") final Long userId,
+    public Object updateUser(@Positive @PathVariable ("userId") final Long userId,
                               @Validated(OnUpdate.class) @RequestBody final UserDto userDto) {
         userDto.setId(userId);
         log.info("Пользователь обновлен");
@@ -34,19 +33,19 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<Object> getAllUsers() {
+    public Object getAllUsers() {
         log.info("Список пользователей выведен");
         return userClient.getAllUsers();
     }
 
     @GetMapping("/{userId}")
-    public Object getUser(@PathVariable("userId")  final Long userId) {
+    public Object getUser(@Positive @PathVariable("userId")  final Long userId) {
         log.info("Польователь с id " + userId + " выведен");
         return userClient.getUser(userId);
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable("userId") final Long userId) {
+    public void deleteUser(@Positive @PathVariable("userId") final Long userId) {
         log.info("Пользователь с id " + userId + " удален");
         userClient.deleteUser(userId);
     }

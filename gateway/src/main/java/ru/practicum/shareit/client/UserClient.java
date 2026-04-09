@@ -1,31 +1,32 @@
 package ru.practicum.shareit.client;
 
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.dto.UserDto;
 
-import java.util.Collection;
-
+@Component
 public class UserClient extends BaseClient {
-    public UserClient(RestTemplate rest) {
-        super(rest);
+
+    public UserClient() {
+        super("/users");
     }
 
     public Object addUser(UserDto user) {
-        return null;
+        return post("", user);
     }
 
     public Object updateUser(UserDto userDto) {
-        return null;
+        return patch("", userDto);
     }
 
-    public Collection<Object> getAllUsers() {
-        return null;
+    public Object getAllUsers() {
+        return get("");
     }
 
     public Object getUser(Long userId) {
-        return null;
+        return get("/" + userId);
     }
 
     public void deleteUser(Long userId) {
+        delete("/"+ userId);
     }
 }

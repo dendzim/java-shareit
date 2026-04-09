@@ -62,6 +62,6 @@ public class ItemController {
                            @RequestHeader("X-Sharer-User-Id") long ownerId,
                            @RequestBody Comment comment) {
         log.info("Комментарий добавлен");
-        return itemService.addComment(ownerId, itemId, comment);
+        return itemService.addComment(itemId, ownerId, comment);
     }
 }

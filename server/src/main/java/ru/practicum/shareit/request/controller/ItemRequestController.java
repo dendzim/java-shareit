@@ -21,7 +21,7 @@ public class ItemRequestController {
     private final ItemRequestServiceImpl itemRequestServiceImpl;
 
     @PostMapping
-    public ItemRequestDto addUser(@RequestBody final ItemRequest itemRequest) {
+    public ItemRequestDto addRequest(@RequestBody final ItemRequest itemRequest) {
         log.info("Запрос добавлен");
         return itemRequestServiceImpl.addItemRequest(itemRequest);
     }
@@ -33,14 +33,14 @@ public class ItemRequestController {
     }
 
     @GetMapping
-    public Collection<ItemRequestDto> getMyReqests(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public Collection<ItemRequestDto> getMyRequests(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
         log.info("Запросы пользователя с id " + ownerId + " выведен");
-        return itemRequestServiceImpl.getMyReqests(ownerId);
+        return itemRequestServiceImpl.getMyRequests(ownerId);
     }
 
     @GetMapping("/{requestId}")
-    public ItemRequestDto getReqestById(@PathVariable("requestId") final Long id) {
+    public ItemRequestDto getRequestById(@PathVariable("requestId") final Long id) {
         log.info("Запрос с id " + id + " выведен");
-        return itemRequestServiceImpl.getReqestById(id);
+        return itemRequestServiceImpl.getRequestById(id);
     }
 }

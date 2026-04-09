@@ -19,5 +19,5 @@ public interface ItemService {
 
     Collection<ItemDto> getNecessaryItem(String text);
 
-    CommentDto addComment(Long userId, Long itemId, Comment comment);
+    CommentDto addComment(Long itemId, Long userId, Comment comment);
 }

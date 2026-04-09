@@ -40,14 +40,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<ItemRequestDto> getMyReqests(Long ownerId) {
+    public Collection<ItemRequestDto> getMyRequests(Long ownerId) {
         Collection<ItemRequest> itemRequest = itemRequestRepository.findByRequestorIdOrderByCreatedDesc(ownerId);
         return addItemsToRequest(itemRequest);
     }
 
     @Transactional
     @Override
-    public ItemRequestDto getReqestById(Long id) {
+    public ItemRequestDto getRequestById(Long id) {
         ItemRequest itemRequest = itemRequestRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Запрос с id = " + id + " не найден"));
 

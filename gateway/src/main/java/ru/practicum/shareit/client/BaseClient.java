@@ -3,20 +3,40 @@ package ru.practicum.shareit.client;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.DefaultUriBuilderFactory;
 
 public class BaseClient {
-    protected final RestTemplate rest;
 
-    public BaseClient(RestTemplate rest) {
-        this.rest = rest;
+    @Value("${shareit-server.url}")
+    private String serverUrl;
+
+    private final String prefix;
+
+    protected RestTemplate rest;
+
+    @PostConstruct
+    public void init() {
+        RestTemplateBuilder builder = new RestTemplateBuilder();
+
+        this.rest = builder.uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + prefix))
+                .requestFactory(() -> new HttpComponentsClientHttpRequestFactory())
+                .build();
+    }
+
+    public BaseClient(String prefix) {
+        this.prefix = prefix;
     }
 
     protected ResponseEntity<Object> get(String path) {
@@ -35,7 +55,7 @@ public class BaseClient {
         return post(path, null, null, body);
     }
 
-    protected <T> ResponseEntity<Object> post(String path, long userId, T body) {
+    protected <T> ResponseEntity<Object> post(String path, T body, long userId) {
         return post(path, userId, null, body);
     }
 
@@ -59,8 +79,12 @@ public class BaseClient {
         return patch(path, userId, null, null);
     }
 
-    protected <T> ResponseEntity<Object> patch(String path, long userId, T body) {
+    protected <T> ResponseEntity<Object> patch(String path, T body, long userId) {
         return patch(path, userId, null, body);
+    }
+
+    protected <T> ResponseEntity<Object> patch(String path, long userId, Map<String, Object> parameters) {
+        return patch(path, userId, parameters, null);
     }
 
     protected <T> ResponseEntity<Object> patch(String path, Long userId, @Nullable Map<String, Object> parameters, T body) {
