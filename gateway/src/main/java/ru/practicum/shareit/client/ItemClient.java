@@ -14,11 +14,11 @@ public class ItemClient extends BaseClient {
     }
 
     public Object addItem(ItemDto itemDto, Long ownerId) {
-        return post("", itemDto, ownerId);
+        return post("", ownerId, itemDto);
     }
 
     public Object updateItem(long itemId, ItemDto itemDto, long ownerId) {
-        return patch("/" + itemId, itemDto, ownerId);
+        return patch("/" + itemId, ownerId, itemDto);
     }
 
     public Object getItem(long itemId) {
@@ -38,6 +38,6 @@ public class ItemClient extends BaseClient {
     }
 
     public Object addComment(long itemId, long ownerId, CommentDto comment) {
-        return post("/" + itemId + "/comment", comment, ownerId);
+        return post("/" + itemId + "/comment", ownerId, comment);
     }
 }

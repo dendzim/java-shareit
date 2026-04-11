@@ -19,7 +19,7 @@ public class BookingClient extends BaseClient {
     }
 
     public Object createBooking(Long userId, BookingDto bookingDto) {
-        return post("", bookingDto, userId);
+        return post("", userId, bookingDto);
     }
 
     public Object updateBookingStatus(Long userId, Long bookingId, Boolean approved) {

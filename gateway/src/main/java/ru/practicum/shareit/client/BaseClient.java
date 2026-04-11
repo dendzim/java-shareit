@@ -1,21 +1,17 @@
 package ru.practicum.shareit.client;
 
-import java.util.List;
-import java.util.Map;
-
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+
+import java.util.List;
+import java.util.Map;
 
 public class BaseClient {
 
@@ -55,7 +51,7 @@ public class BaseClient {
         return post(path, null, null, body);
     }
 
-    protected <T> ResponseEntity<Object> post(String path, T body, long userId) {
+    protected <T> ResponseEntity<Object> post(String path, long userId, T body) {
         return post(path, userId, null, body);
     }
 
@@ -79,7 +75,7 @@ public class BaseClient {
         return patch(path, userId, null, null);
     }
 
-    protected <T> ResponseEntity<Object> patch(String path, T body, long userId) {
+    protected <T> ResponseEntity<Object> patch(String path, long userId, T body) {
         return patch(path, userId, null, body);
     }
 

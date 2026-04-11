@@ -25,17 +25,16 @@ public class UserController {
     private final UserServiceImpl userServiceImpl;
 
     @PostMapping
-    public UserDto addUser(@Validated(OnCreate.class) @RequestBody final UserDto user) {
+    public User addUser(@Validated(OnCreate.class) @RequestBody final UserDto user) {
         log.info("Пользователь добавлен");
         return userServiceImpl.addUser(user);
     }
 
     @PatchMapping("/{userId}")
-    public UserDto updateUser(@PathVariable("userId") final Long userId,
+    public User updateUser(@PathVariable Long userId,
                               @Validated(OnUpdate.class) @RequestBody final UserDto userDto) {
-        userDto.setId(userId);
         log.info("Пользователь обновлен");
-        return userServiceImpl.updateUser(userDto);
+        return userServiceImpl.updateUser(userId, userDto);
     }
 
     @GetMapping

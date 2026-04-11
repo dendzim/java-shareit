@@ -25,11 +25,10 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}")
-    public Object updateUser(@Positive @PathVariable ("userId") final Long userId,
+    public Object updateUser(@Positive @PathVariable Long userId,
                               @Validated(OnUpdate.class) @RequestBody final UserDto userDto) {
-        userDto.setId(userId);
         log.info("Пользователь обновлен");
-        return userClient.updateUser(userDto);
+        return userClient.updateUser(userId, userDto);
     }
 
     @GetMapping

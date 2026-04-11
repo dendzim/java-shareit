@@ -14,8 +14,8 @@ public class UserClient extends BaseClient {
         return post("", user);
     }
 
-    public Object updateUser(UserDto userDto) {
-        return patch("", userDto);
+    public Object updateUser(Long userId, UserDto userDto) {
+        return patch("/" + userId, userDto);
     }
 
     public Object getAllUsers() {

@@ -22,27 +22,25 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
-    public UserDto addUser(UserDto userDto) {
+    public User addUser(UserDto userDto) {
         User user = toUser(userDto);
-        return toUserDto(userRepository.save(user));
+        return userRepository.save(user);
     }
 
     @Override
-    @Transactional
-    public UserDto updateUser(UserDto userDto) {
-        if (!userRepository.existsById(userDto.getId())) {
+    public User updateUser(Long userId, UserDto userDto) {
+        if (!userRepository.existsById(userId)) {
             log.warn("Пользователь с указанным id не найден");
-            throw new NotFoundException("Пользователь с id = " + userDto.getId() + " не найден");
+            throw new NotFoundException("Пользователь с id = " + userId + " не найден");
         }
-        User newUser = getUser(userDto.getId());
+        User newUser = getUser(userId);
         if (userDto.getName() != null) {
             newUser.setName(userDto.getName());
         }
         if (userDto.getEmail() != null) {
             newUser.setEmail(userDto.getEmail());
         }
-        return toUserDto(userRepository.save(newUser));
+        return userRepository.save(newUser);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Transactional(readOnly = true)
     @Override
     public Collection<ItemRequestDto> getAllRequests() {
-        Collection<ItemRequest> itemRequest = itemRequestRepository.findAllOrderByCreatedDesc();
+        Collection<ItemRequest> itemRequest = itemRequestRepository.findAllByOrderByCreatedDesc();
         return addItemsToRequest(itemRequest);
     }
 
