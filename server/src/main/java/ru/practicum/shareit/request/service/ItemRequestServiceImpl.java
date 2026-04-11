@@ -8,6 +8,7 @@ import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemMapper;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dao.ItemRequestMapper;
 import ru.practicum.shareit.request.dao.ItemRequestRepository;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
@@ -27,7 +28,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     private final ItemRepository itemRepository;
 
     @Override
-    public ItemRequestDto addItemRequest(ItemRequest itemRequest) {
+    public ItemRequestDto addItemRequest(ItemRequest itemRequest, Long userId) {
+        itemRequest.setRequestorId(userId);
         return ItemRequestMapper.mapToItemRequestDto(itemRequestRepository.save(itemRequest));
     }
 
@@ -63,22 +65,22 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     }
 
     private List<ItemRequestDto> addItemsToRequest(Collection<ItemRequest> itemRequests) {
-
-        List<Long> ids = itemRequests.stream()
+        List<Long> requestIds = itemRequests.stream()
                 .map(ItemRequest::getId)
                 .toList();
 
-        List<ItemDto> itemsByRequestId = itemRepository.findAllByRequestIdIn(ids);
-        Map<Long, List<ItemDto>> map = itemsByRequestId.stream()
-                .collect(Collectors.groupingBy(
-                        ItemDto::getRequestId
-                ));
+        List<Item> items = itemRepository.findAllByRequestIdIn(requestIds);
 
-        return itemRequests.stream().map(itemRequest -> {
-            ItemRequestDto dto = ItemRequestMapper.mapToItemRequestDto(itemRequest);
-            dto.setItems(map.get(itemRequest.getId()));
+        Map<Long, List<ItemDto>> itemsByRequestId = items.stream()
+                .map(ItemMapper::toItemDto)
+                .collect(Collectors.groupingBy(ItemDto::getRequestId));
 
-            return dto;
-        }).toList();
+        return itemRequests.stream()
+                .map(request -> {
+                    ItemRequestDto dto = ItemRequestMapper.mapToItemRequestDto(request);
+                    dto.setItems(itemsByRequestId.getOrDefault(request.getId(), List.of()));
+                    return dto;
+                })
+                .toList();
     }
 }

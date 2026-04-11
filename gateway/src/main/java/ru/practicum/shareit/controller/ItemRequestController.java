@@ -16,9 +16,10 @@ public class ItemRequestController {
     private final ItemRequestClient itemRequestClient;
 
     @PostMapping
-    public Object addRequest(@RequestBody final ItemRequestDto itemRequest) {
+    public Object addRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
+                             @RequestBody final ItemRequestDto itemRequest) {
         log.info("Запрос добавлен");
-        return itemRequestClient.addItemRequest(itemRequest);
+        return itemRequestClient.addItemRequest(itemRequest, userId);
     }
 
     @GetMapping("/all")

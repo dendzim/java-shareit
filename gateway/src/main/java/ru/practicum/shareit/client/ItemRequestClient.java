@@ -10,8 +10,8 @@ public class ItemRequestClient extends BaseClient {
         super("/requests");
     }
 
-    public Object addItemRequest(ItemRequestDto itemRequest) {
-        return post("", itemRequest);
+    public Object addItemRequest(ItemRequestDto itemRequest, Long userId) {
+        return post("", userId, itemRequest);
     }
 
     public Object getAllRequests() {
