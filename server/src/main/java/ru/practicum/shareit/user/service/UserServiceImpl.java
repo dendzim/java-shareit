@@ -44,12 +44,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<UserDto> dtoList = new ArrayList<>();
-        for (User user : userRepository.findAll()) {
-            dtoList.add(toUserDto(user));
-        }
-        return dtoList;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override

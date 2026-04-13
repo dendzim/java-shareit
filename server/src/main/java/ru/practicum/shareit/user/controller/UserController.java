@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Collection<UserDto> getAllUsers() {
+    public Collection<User> getAllUsers() {
         log.info("Список пользователей выведен");
         return userServiceImpl.getAllUsers();
     }
