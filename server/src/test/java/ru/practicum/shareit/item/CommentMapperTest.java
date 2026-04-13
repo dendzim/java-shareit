@@ -16,14 +16,14 @@ public class CommentMapperTest {
     @Test
     public void shouldMapCommentToCommentDto() {
         User author = new User();
-        author.setName("Author Name");
+        author.setName("Name");
         Item item = new Item();
         item.setId(1L);
         Comment comment = new Comment();
         comment.setId(100L);
         comment.setItem(item);
         comment.setAuthor(author);
-        comment.setText("Comment text");
+        comment.setText("Comment");
         LocalDateTime created = LocalDateTime.now();
         comment.setCreated(created);
 

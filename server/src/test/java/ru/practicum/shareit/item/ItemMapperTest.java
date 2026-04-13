@@ -14,7 +14,7 @@ public class ItemMapperTest {
     public void shouldMapItemDtoToItem() {
         ItemDto itemDto = new ItemDto();
         itemDto.setId(1L);
-        itemDto.setName("Item name");
+        itemDto.setName("name");
         itemDto.setDescription("Item description");
         itemDto.setAvailable(true);
 
@@ -30,7 +30,7 @@ public class ItemMapperTest {
     public void shouldMapItemToItemDto() {
         Item item = new Item();
         item.setId(2L);
-        item.setName("Item");
+        item.setName("name");
         item.setDescription("Description");
         item.setIsAvailable(false);
 
