@@ -93,7 +93,7 @@ public class BookingControllerTest {
         when(bookingService.findByBookerAndState(anyLong(), any())).thenReturn(Collections.singletonList(booking));
 
         mockMvc.perform(get("/bookings")
-                        .header( "X-Sharer-User-Id", 1L)
+                        .header("X-Sharer-User-Id", 1L)
                         .param("state", "ALL"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1));

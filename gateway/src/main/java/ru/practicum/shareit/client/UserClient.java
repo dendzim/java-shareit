@@ -27,6 +27,6 @@ public class UserClient extends BaseClient {
     }
 
     public void deleteUser(Long userId) {
-        delete("/"+ userId);
+        delete("/" + userId);
     }
 }

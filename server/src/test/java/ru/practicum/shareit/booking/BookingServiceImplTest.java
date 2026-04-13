@@ -92,7 +92,7 @@ public class BookingServiceImplTest {
         booking.setItem(item);
         booking.setBooker(booker);
 
-        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));  // ← убрали пробел после (
 
         Booking result = bookingService.getBooking(1L, 1L);
 

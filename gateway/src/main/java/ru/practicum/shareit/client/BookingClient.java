@@ -2,7 +2,6 @@ package ru.practicum.shareit.client;
 
 import java.util.Collections;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import ru.practicum.shareit.dto.BookingDto;
 import ru.practicum.shareit.dto.BookingState;
