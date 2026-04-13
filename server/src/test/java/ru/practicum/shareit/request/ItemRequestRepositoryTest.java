@@ -26,18 +26,20 @@ public class ItemRequestRepositoryTest {
 
     @Test
     public void shouldFindByRequestorIdOrderByCreatedDesc() {
-        User testUser = new User(1L, "name", "email@test.com");
-        User user = userRepository.save(testUser);
+        User testUser = new User(null, "name", "email@test.com");
+        User savedUser = userRepository.save(testUser);
+
         ItemRequest request = new ItemRequest();
-        request.setRequestorId(user.getId());
+        request.setRequestorId(savedUser.getId());
         request.setDescription("test");
-        request.setCreated(LocalDate.now());
+        request.setCreated(LocalDate.now());  // LocalDateTime, если в БД TIMESTAMP
 
-        ItemRequest request1 = itemRequestRepository.save(request);
+        ItemRequest savedRequest = itemRequestRepository.save(request);
 
-        Collection<ItemRequest> requests = itemRequestRepository.findByRequestorIdOrderByCreatedDesc(user.getId());
+        Collection<ItemRequest> requests = itemRequestRepository
+                .findByRequestorIdOrderByCreatedDesc(savedUser.getId());
 
         assertThat(requests).hasSize(1);
-        assertThat(requests.iterator().next().getId()).isEqualTo(request1.getId());
+        assertThat(requests.iterator().next().getId()).isEqualTo(savedRequest.getId());
     }
 }
