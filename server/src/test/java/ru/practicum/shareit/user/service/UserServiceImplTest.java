@@ -86,6 +86,17 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void shouldThrowNotFoundExceptionWhenUpdateNonExistentUser() {
+        Long nonExistentId = 999L;
+        UserDto userDto = new UserDto("Updated", "updated@test.com");
+
+        when(userRepository.existsById(nonExistentId)).thenReturn(false);
+
+        assertThatThrownBy(() -> userService.updateUser(999L, userDto))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     public void shouldDeleteUser() {
         userService.deleteUser(1L);
 

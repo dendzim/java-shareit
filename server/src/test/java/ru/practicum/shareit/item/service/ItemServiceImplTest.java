@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.shareit.booking.dao.BookingRepository;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.exceptions.BadRequestException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.CommentRepository;
 import ru.practicum.shareit.item.dao.ItemRepository;
@@ -16,6 +17,7 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.service.UserServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -24,6 +26,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -43,8 +46,13 @@ public class ItemServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private UserServiceImpl userService;
+
     @InjectMocks
     private ItemServiceImpl itemService;
+
+
 
     @Test
     public void shouldGetItem() {
@@ -206,5 +214,30 @@ public class ItemServiceImplTest {
         verify(bookingRepository).existsByItemIdAndBookerIdAndStatusIsAndEndBefore(
                 eq(itemId), eq(userId), eq(BookingStatus.APPROVED), any(LocalDateTime.class));
         verify(commentRepository).save(any(Comment.class));
+    }
+
+    @Test
+    void shouldThrowBadRequestExceptionWhenUserNeverBookedItem() {
+        Long itemId = 1L;
+        Long userId = 1L;
+        Comment comment = new Comment();
+        comment.setText("zwexrciytvuiubh");
+
+        User user = new User(1L, "oleg", "oleg@test.com");
+        Item item = new Item(itemId, "name", "desc", true, 1L, null);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+        when(bookingRepository.existsByItemIdAndBookerIdAndStatusIsAndEndBefore(
+                eq(itemId), eq(userId), eq(BookingStatus.APPROVED), any(LocalDateTime.class)))
+                .thenReturn(false);
+
+        BadRequestException exception = assertThrows(BadRequestException.class, () ->
+                itemService.addComment(itemId, userId, comment)
+        );
+
+        assertThat(exception.getMessage()).isEqualTo("Пользователь никогда не брал предмет в аренду");
+
+        verify(commentRepository, never()).save(any());
     }
 }
