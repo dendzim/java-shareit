@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dao.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.request.dao.ItemRequestRepository;
@@ -12,10 +13,12 @@ import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +48,14 @@ public class ItemRequestServiceTest {
     }
 
     @Test
+    public void shouldThrowNotFoundExceptionWhenGetNonExistentRequest() {
+        when(requestRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> itemRequestService.getRequestById(999L))
+                .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
     public void shouldGetRequest() {
         ItemRequest request = new ItemRequest(1L, "desc", 1L, LocalDate.now());
         Item item = mock(Item.class);
@@ -56,5 +67,40 @@ public class ItemRequestServiceTest {
 
         assertThat(result.getId()).isEqualTo(1L);
         verify(requestRepository).findById(1L);
+    }
+
+    @Test
+    public void shouldGetRequests() {
+        ItemRequest request = new ItemRequest(1L, "ddrftgyhuesc", 1L, LocalDate.now());
+
+        when(requestRepository.findByRequestorIdOrderByCreatedDesc(1L)).thenReturn(List.of(request));
+        when(itemRepository.findAllByRequestIdIn(any())).thenReturn(List.of());
+
+        Collection<ItemRequestDto> result = itemRequestService.getMyRequests(1L);
+
+        assertThat(result).hasSize(1);
+        verify(requestRepository).findByRequestorIdOrderByCreatedDesc(1L);
+    }
+
+    @Test
+    public void shouldGetAllRequests() {
+        ItemRequest request = new ItemRequest();
+        request.setId(1L);
+        request.setDescription("dedfghsc");
+        request.setRequestorId(1L);
+        request.setCreated(LocalDate.now());
+
+        when(requestRepository.findAllByOrderByCreatedDesc())
+                .thenReturn(List.of(request));
+
+        when(itemRepository.findAllByRequestIdIn(any()))
+                .thenReturn(List.of());
+
+        Collection<ItemRequestDto> result = itemRequestService.getAllRequests();
+
+        assertThat(result).hasSize(1);
+
+        verify(requestRepository).findAllByOrderByCreatedDesc();
+        verify(itemRepository).findAllByRequestIdIn(any());
     }
 }

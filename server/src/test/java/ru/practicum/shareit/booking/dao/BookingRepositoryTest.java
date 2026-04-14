@@ -135,10 +135,10 @@ public class BookingRepositoryTest {
 
         List<Booking> bookings = bookingRepository
                 .findByBookerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(
-                booker.getId(),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+                        booker.getId(),
+                        LocalDateTime.now(),
+                        LocalDateTime.now()
+                );
 
         assertThat(bookings).hasSize(1);
     }

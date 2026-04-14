@@ -127,19 +127,6 @@ public class BookingServiceImplTest {
     }
 
     @Test
-    public void shouldFindByOwnerAndStateCurrent() {
-        when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
-
-        when(bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class), any(LocalDateTime.class)))
-                .thenReturn(List.of(new Booking()));
-
-        Collection<Booking> result = bookingService.findByOwnerAndState(1L, BookingState.CURRENT);
-
-        assertThat(result).hasSize(1);
-        verify(bookingRepository).findByItemOwnerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class), any(LocalDateTime.class));
-    }
-
-    @Test
     public void shouldFindByBookerAndStatePast() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
         when(bookingRepository.findByBookerIdAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class)))
@@ -186,6 +173,17 @@ public class BookingServiceImplTest {
     }
 
     @Test
+    public void shouldFindByOwnerAndStateRejected() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findByItemOwnerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.REJECTED)).thenReturn(List.of(new Booking()));
+
+        Collection<Booking> result = bookingService.findByOwnerAndState(1L, BookingState.REJECTED);
+
+        assertThat(result).hasSize(1);
+        verify(bookingRepository).findByItemOwnerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.REJECTED);
+    }
+
+    @Test
     public void shouldFindByBookerAndStateRejected() {
         when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
         when(bookingRepository.findByBookerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.REJECTED)).thenReturn(List.of(new Booking()));
@@ -194,5 +192,73 @@ public class BookingServiceImplTest {
 
         assertThat(result).hasSize(1);
         verify(bookingRepository).findByBookerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.REJECTED);
+    }
+
+    @Test
+    public void shouldFindByBookerAndStateWaiting() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findByBookerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.WAITING))
+                .thenReturn(List.of(new Booking()));
+
+        Collection<Booking> result = bookingService.findByBookerAndState(1L, BookingState.WAITING);
+
+        assertThat(result).hasSize(1);
+        verify(bookingRepository).findByBookerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.WAITING);
+    }
+
+    @Test
+    public void shouldFindByOwnerAndStateWaiting() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findByItemOwnerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.WAITING))
+                .thenReturn(List.of(new Booking()));
+
+        Collection<Booking> result = bookingService.findByOwnerAndState(1L, BookingState.WAITING);
+
+        assertThat(result).hasSize(1);
+        verify(bookingRepository).findByItemOwnerIdAndStatusIsOrderByEndDesc(1L, BookingStatus.WAITING);
+    }
+
+    @Test
+    public void shouldFindByBookerAndStateCurrent() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
+        when(bookingRepository.findByBookerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(List.of(new Booking()));
+
+        Collection<Booking> result = bookingService.findByBookerAndState(1L, BookingState.CURRENT);
+
+        assertThat(result).hasSize(1);
+        verify(bookingRepository).findByBookerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    public void shouldFindByOwnerAndStateCurrent() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(new User()));
+
+        when(bookingRepository.findByItemOwnerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class), any(LocalDateTime.class)))
+                .thenReturn(List.of(new Booking()));
+
+        Collection<Booking> result = bookingService.findByOwnerAndState(1L, BookingState.CURRENT);
+
+        assertThat(result).hasSize(1);
+        verify(bookingRepository).findByItemOwnerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(any(), any(LocalDateTime.class), any(LocalDateTime.class));
+    }
+
+    @Test
+    public void shouldUpdateBookingStatus() {
+        User owner = new User(2L, "owner", "owner@test.com");
+        Item item = new Item(1L, "item", "desc", true, 2L, null);
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setItem(item);
+        booking.setBooker(new User(1L, "booker", "booker@test.com"));
+        booking.setStatus(BookingStatus.WAITING);
+
+        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(any())).thenReturn(booking);
+
+        Booking result = bookingService.updateBookingStatus(2L, 1L, true);
+
+        assertThat(result.getStatus()).isEqualTo(BookingStatus.APPROVED);
+        verify(bookingRepository).save(any());
     }
 }
