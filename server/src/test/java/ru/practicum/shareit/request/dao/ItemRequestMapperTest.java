@@ -1,7 +1,6 @@
-package ru.practicum.shareit.request;
+package ru.practicum.shareit.request.dao;
 
 import org.junit.jupiter.api.Test;
-import ru.practicum.shareit.request.dao.ItemRequestMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 
