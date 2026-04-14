@@ -32,7 +32,7 @@ public class ItemRequestRepositoryTest {
         ItemRequest request = new ItemRequest();
         request.setRequestorId(savedUser.getId());
         request.setDescription("test");
-        request.setCreated(LocalDate.now());  // LocalDateTime, если в БД TIMESTAMP
+        request.setCreated(LocalDate.now());
 
         ItemRequest savedRequest = itemRequestRepository.save(request);
 

@@ -8,33 +8,32 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.booking.model.LastAndNextDate;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    Collection<Booking> findByBookerIdOrderByEndDesc(Long bookerId);
+    List<Booking> findByBookerIdOrderByEndDesc(Long bookerId);
 
-    Collection<Booking> findByItemOwnerIdOrderByEndDesc(Long ownerId);
+    List<Booking> findByItemOwnerIdOrderByEndDesc(Long ownerId);
 
-    Collection<Booking> findByBookerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(Long bookerId, LocalDateTime now,
+    List<Booking> findByBookerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(Long bookerId, LocalDateTime now,
                                                                                    LocalDateTime now1);
 
-    Collection<Booking> findByBookerIdAndStatusIsOrderByEndDesc(Long bookerId, BookingStatus bookingStatus);
+    List<Booking> findByBookerIdAndStatusIsOrderByEndDesc(Long bookerId, BookingStatus bookingStatus);
 
-    Collection<Booking> findByBookerIdAndEndIsBeforeOrderByEndDesc(Long bookerId, LocalDateTime now);
+    List<Booking> findByBookerIdAndEndIsBeforeOrderByEndDesc(Long bookerId, LocalDateTime now);
 
-    Collection<Booking> findByBookerIdAndStartIsAfterOrderByEndDesc(Long bookerId, LocalDateTime now);
+    List<Booking> findByBookerIdAndStartIsAfterOrderByEndDesc(Long bookerId, LocalDateTime now);
 
-    Collection<Booking> findByItemOwnerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(Long ownerId, LocalDateTime now,
+    List<Booking> findByItemOwnerIdAndStartIsBeforeAndEndIsBeforeOrderByEndDesc(Long ownerId, LocalDateTime now,
                                                                                       LocalDateTime now1);
 
-    Collection<Booking> findByItemOwnerIdAndStatusIsOrderByEndDesc(Long ownerId, BookingStatus bookingStatus);
+    List<Booking> findByItemOwnerIdAndStatusIsOrderByEndDesc(Long ownerId, BookingStatus bookingStatus);
 
-    Collection<Booking> findByItemOwnerIdAndEndIsBeforeOrderByEndDesc(Long ownerId, LocalDateTime now);
+    List<Booking> findByItemOwnerIdAndEndIsBeforeOrderByEndDesc(Long ownerId, LocalDateTime now);
 
-    Collection<Booking> findByItemOwnerIdAndStartIsAfterOrderByEndDesc(Long ownerId, LocalDateTime now);
+    List<Booking> findByItemOwnerIdAndStartIsAfterOrderByEndDesc(Long ownerId, LocalDateTime now);
 
     boolean existsByItemIdAndBookerIdAndStatusIsAndEndBefore(Long itemId, Long userId, BookingStatus bookingStatus,
                                                              LocalDateTime now);
