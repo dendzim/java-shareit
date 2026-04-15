@@ -1,5 +1,6 @@
 package ru.practicum.shareit.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public Object addComment(@Positive @PathVariable("itemId") final long itemId,
                                  @RequestHeader("X-Sharer-User-Id") @Positive long ownerId,
-                                 @RequestBody CommentDto comment) {
+                             @Valid @RequestBody CommentDto comment) {
         log.info("Комментарий добавлен");
         return itemClient.addComment(itemId, ownerId, comment);
     }

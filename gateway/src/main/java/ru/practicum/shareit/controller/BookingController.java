@@ -1,5 +1,6 @@
 package ru.practicum.shareit.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -22,7 +23,7 @@ public class BookingController {
 
     @PostMapping
     public Object createBooking(@RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-                                 @RequestBody BookingDto bookingDto) {
+                                @Valid @RequestBody BookingDto bookingDto) {
 
         return bookingClient.createBooking(userId, bookingDto);
     }
@@ -39,7 +40,7 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public Object getBooking(
             @RequestHeader("X-Sharer-User-Id") @Positive Long userId,
-            @PathVariable Long bookingId) {
+            @PathVariable @Positive Long bookingId) {
 
         return bookingClient.getBooking(userId, bookingId);
     }
