@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.practicum.shareit.exceptions.InternalServerException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -15,8 +16,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -61,6 +61,21 @@ public class UserServiceImplTest {
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getName()).isEqualTo("name");
         verify(userRepository).save(any());
+    }
+
+    @Test
+    public void shouldThrowInternalServerExceptionWhenAddUserWithExistingEmail() {
+        UserDto userDto = new UserDto();
+        userDto.setName("name");
+        userDto.setEmail("email@test.com");
+
+        when(userRepository.existsByEmail("email@test.com")).thenReturn(true);
+
+        assertThatThrownBy(() -> userService.addUser(userDto))
+                .isInstanceOf(InternalServerException.class)
+                .hasMessage("Пользователь с такой почтой уже существует");
+
+        verify(userRepository, never()).save(any());
     }
 
     @Test

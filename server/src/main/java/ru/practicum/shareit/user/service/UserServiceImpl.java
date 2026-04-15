@@ -3,6 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exceptions.InternalServerException;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -20,6 +21,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addUser(UserDto userDto) {
+        if (userRepository.existsByEmail(userDto.getEmail())) {
+            throw new InternalServerException("Пользователь с такой почтой уже существует");
+        }
         User user = toUser(userDto);
         return userRepository.save(user);
     }
