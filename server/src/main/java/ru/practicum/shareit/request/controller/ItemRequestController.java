@@ -1,0 +1,47 @@
+package ru.practicum.shareit.request.controller;
+
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestServiceImpl;
+
+import java.util.Collection;
+
+/**
+ * TODO Sprint add-item-requests.
+ */
+@Slf4j
+@RestController
+@RequestMapping(path = "/requests")
+@AllArgsConstructor
+public class ItemRequestController {
+
+    private final ItemRequestServiceImpl itemRequestServiceImpl;
+
+    @PostMapping
+    public ItemRequestDto addRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
+                                     @RequestBody final ItemRequest itemRequest) {
+        log.info("Запрос добавлен");
+        return itemRequestServiceImpl.addItemRequest(itemRequest, userId);
+    }
+
+    @GetMapping("/all")
+    public Collection<ItemRequestDto> getAllRequests() {
+        log.info("Список запросов выведен");
+        return itemRequestServiceImpl.getAllRequests();
+    }
+
+    @GetMapping
+    public Collection<ItemRequestDto> getMyRequests(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+        log.info("Запросы пользователя с id " + ownerId + " выведен");
+        return itemRequestServiceImpl.getMyRequests(ownerId);
+    }
+
+    @GetMapping("/{requestId}")
+    public ItemRequestDto getRequestById(@PathVariable("requestId") final Long id) {
+        log.info("Запрос с id " + id + " выведен");
+        return itemRequestServiceImpl.getRequestById(id);
+    }
+}
